@@ -2,7 +2,7 @@
 
 [English](README-en.md) | **فارسی**
 
-# CMR Printer (چاپگر سی‌ام‌آر)
+# CMR Printer (چاپگر سیمر)
 
 یک برنامه‌ی وب تک‌فایلی برای **چاپ اطلاعات روی برگه‌های CMR از قبل چاپ‌شده**.
 <img width="1332" height="641" alt="image" src="https://github.com/user-attachments/assets/9024e963-c421-4e05-a183-f6a1f1455f33" />
