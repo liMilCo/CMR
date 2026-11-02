@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CMR Printer</title>
+<style>
+:root{--bg:#eef0f2;--panel:#fff;--ink:#1b2430;--mute:#667085;--line:#d5dae1;--accent:#1f4fd8;--accent-ink:#fff;--warn:#b42318}
+@media (prefers-color-scheme:dark){:root{--bg:#14181e;--panel:#1d232c;--ink:#e8ecf1;--mute:#9aa4b2;--line:#323b47;--accent:#6f94ff;--accent-ink:#0b1220;--warn:#ff8a80}}
+:root{color-scheme:light dark}
+select,select option{background-color:var(--panel);color:var(--ink)}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font:14px/1.4 "Segoe UI",system-ui,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+#app{display:grid;grid-template-columns:420px 1fr;min-height:100vh}
+#side{background:var(--panel);border-right:1px solid var(--line);padding:14px;overflow:auto;max-height:100vh;position:sticky;top:0}
+#stage{padding:16px;overflow:auto;max-height:100vh;position:sticky;top:0}
+h1{font-size:17px;margin:0 0 10px}
+h2{font-size:13px;margin:18px 0 8px;padding-top:12px;border-top:1px solid var(--line)}
+label{display:block;font-size:12px;color:var(--mute);margin:8px 0 2px}
+input,textarea,select{width:100%;font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+.fh{display:flex;justify-content:space-between;align-items:flex-end;gap:8px;margin-top:8px}
+.fh label{margin:0;flex:1}
+.tp{font-size:12px;color:var(--mute);white-space:nowrap}
+.tp input{width:72px;padding:3px 6px}
+textarea{resize:vertical;font-family:inherit}
+input:focus,textarea:focus,select:focus,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+button{font:inherit;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:6px;padding:6px 10px}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+button.danger{color:var(--warn)}
+.row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.row>*{flex:1 1 auto}
+.row>button{flex:0 0 auto}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.grid4 label{margin-top:0}
+.note{font-size:12px;color:var(--mute);margin:6px 0}
+#printBar{position:sticky;bottom:-14px;background:var(--panel);padding:10px 0 4px;margin-top:14px;border-top:1px solid var(--line)}
+#printBar button{width:100%;padding:11px;font-size:15px}
+.rec{display:flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:6px;padding:4px 6px;margin-top:4px}
+.rec span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec button{padding:2px 8px}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9}
+#toast.on{opacity:1}
+
+/* sheet */
+#sheetWrap{transform-origin:top left;transform:scale(var(--s,1));width:210mm}
+#sheetBox{width:calc(210mm*var(--s,1));height:calc(297mm*var(--s,1));margin:0 auto 0 0}
+#sheet{position:relative;width:210mm;height:296.5mm;background:#fff;box-shadow:0 2px 14px rgba(0,0,0,.25);overflow:hidden;color:#000}
+#bg{position:absolute;inset:0;background-size:100% 100%;background-repeat:no-repeat;opacity:.45}
+#layer{position:absolute;left:0;top:0;width:210mm;height:297mm}
+.f{position:absolute;white-space:pre-wrap;overflow-wrap:anywhere;font-family:Arial,Tahoma,sans-serif;color:#000}
+.edit .f{outline:1px dashed rgba(31,79,216,.7);background:rgba(31,79,216,.07);cursor:move;min-height:4mm;touch-action:none}
+.edit .f.sel{outline:2px solid #d9480f;background:rgba(217,72,15,.12)}
+.edit .f::before{content:attr(data-n);position:absolute;left:0;top:-3.2mm;font:7pt Arial;color:#1f4fd8;white-space:nowrap}
+
+@media (max-width:900px){
+  #app{grid-template-columns:1fr}
+  #side,#stage{position:static;max-height:none}
+}
+@media print{
+  @page{size:A4;margin:0}
+  html,body{background:#fff}
+  #side,#toast{display:none!important}
+  #app{display:block}
+  #stage{padding:0;overflow:visible;max-height:none;position:static}
+  #sheetWrap{transform:none!important}
+  #sheetBox{width:auto;height:auto}
+  #sheet{box-shadow:none;width:210mm;height:296mm}
+  #bg{display:none}
+  .edit .f{outline:none!important;background:none!important}
+  .edit .f::before{display:none}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <aside id="side">
+    <h1>CMR Printer</h1>
+
+    <label for="profile">Company / CMR form</label>
+    <div class="row">
+      <select id="profile"></select>
+      <button id="pNew" title="New company (copies current layout)">New</button>
+      <button id="pRen">Rename</button>
+      <button id="pDel" class="danger">Delete</button>
+    </div>
+
+    <h2>Alignment for this company's form</h2>
+    <div class="grid4">
+      <div><label for="offTop">Top (mm)</label><input id="offTop" type="number" step="0.5"></div>
+      <div><label for="offLeft">Left (mm)</label><input id="offLeft" type="number" step="0.5"></div>
+      <div><label for="font">Font (pt)</label><input id="font" type="number" step="0.5" min="5"></div>
+      <div><label for="lh">Line gap</label><input id="lh" type="number" step="0.05" min="0.8"></div>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <button id="editBtn">Move fields on preview</button>
+      <button id="bgBtn">Add form photo</button>
+      <button id="bgDel">Remove photo</button>
+      <button id="resetLayout" class="danger" title="Back to default positions, margins and font">Reset to default</button>
+    </div>
+    <input id="bgFile" type="file" accept="image/*" hidden>
+    <div id="selBox" hidden>
+      <div class="grid4" style="margin-top:8px">
+        <div style="grid-column:span 4"><b id="selName" style="font-size:12px"></b></div>
+        <div><label for="sx">X (mm)</label><input id="sx" type="number" step="0.5"></div>
+        <div><label for="sy">Y (mm)</label><input id="sy" type="number" step="0.5"></div>
+        <div><label for="sw">Width</label><input id="sw" type="number" step="0.5"></div>
+        <div><label>&nbsp;</label><button id="sReset" style="width:100%">Reset</button></div>
+      </div>
+    </div>
+    <p class="note">Tip: add a photo of the blank CMR as a guide (shown on screen only, never printed). Turn on “Move fields”, drag boxes to the right place. Everything is saved per company.</p>
+
+    <h2>Shipment data</h2>
+    <div class="grid4" style="grid-template-columns:1fr 1fr auto;align-items:end">
+      <div><label for="pDate">Print date (automatic = today)</label><input id="pDate" type="date"></div>
+      <div><label for="dFmt">Date format</label>
+        <select id="dFmt"><option>YYYY/MM/DD</option><option>YYYY-MM-DD</option><option>DD.MM.YYYY</option><option>DD/MM/YYYY</option></select></div>
+      <button id="dToday">Today</button>
+    </div>
+    <div id="form"></div>
+    <div class="row" style="margin-top:10px">
+      <button id="clearBtn" class="danger">Clear form</button>
+    </div>
+
+    <h2>Saved shipments</h2>
+    <div class="row">
+      <input id="recName" placeholder="Name, e.g. Arcolev – 19 Oct">
+      <button id="recSave">Save</button>
+    </div>
+    <div id="recs"></div>
+
+    <h2>Backup</h2>
+    <div class="row">
+      <button id="exp">Export Data</button>
+      <button id="imp">Import Data</button>
+      <button id="srv">Load from server</button>
+    </div>
+    <input id="impFile" type="file" accept="application/json" hidden>
+    <p class="note">Data is saved in this browser. To share it: export config.json, upload it to the server next to the HTML file. A browser with no saved data loads it automatically.</p>
+
+    <div id="printBar"><button class="primary" id="printBtn">Print on CMR</button>
+      <p class="note">In the print dialog: paper A4, Margins “None”, Scale “100%”, Headers/footers off.</p></div>
+  </aside>
+
+  <main id="stage">
+    <div id="sheetBox"><div id="sheetWrap">
+      <div id="sheet"><div id="bg"></div><div id="layer"></div></div>
+    </div></div>
+  </main>
+</div>
+<div id="toast"></div>
+
+<script>
+const KEY = 'cmrPrinter.v1';
+/* x,y,w in mm on A4 (before the company's top/left offset) */
+const FIELDS = [
+  {k:'sender',   n:'1 Sender',                    x:13,  y:20,  w:92, rows:4},
+  {k:'consignee',n:'2 Consignee',                 x:13,  y:48,  w:92, rows:4},
+  {k:'delivery', n:'3 Place of delivery',         x:13,  y:75,  w:92, rows:2},
+  {k:'taking',   n:'4 Place & date of taking over  ({date} = automatic date)',x:13, y:90, w:92, rows:2},
+  {k:'docs',     n:'5 Documents attached',        x:13,  y:107, w:92, rows:3},
+  {k:'goods',    n:'6-9 Marks, packages, packing, goods', x:11, y:140, w:117, rows:8, align:'center'},
+  {k:'stat',     n:'10 Statistical number',       x:130, y:140, w:22, rows:1},
+  {k:'weight',   n:'11 Gross weight (kg)',        x:154, y:140, w:22, rows:1, bold:true},
+  {k:'volume',   n:'12 Volume (m3)',              x:178, y:140, w:25, rows:1},
+  {k:'instr',    n:"13 Sender's instruction",     x:12,  y:215, w:88, rows:4},
+  {k:'reserv',   n:'18 Carrier reservations',     x:116, y:95, w:90,rows:3},
+  {k:'estPlace', n:'21 Established in',           x:29, y:235,w:38, rows:1},
+  {k:'estDate',  n:'21 Date  ({date} = automatic date)',                     x:75, y:235,w:30, rows:1}
+];
+const SAMPLE = {
+  sender:"SENDER COMPANEY LLC\nAstrakhan, Russia",
+  consignee:"CONSIGNEE COMPANEY LLC\nTax Code: 012345678\nPushkin str.0 Yerevan, Armenia",
+  delivery:"ARMENIA - YEREVAN",
+  taking:"ANZALI FREE ZONE\n{date}",
+  docs:"Transit Declaration: 105254",
+  goods:"ONE TANKER\nULSD 10 ppm\nGOODS OF EURASIAN ECONOMIC UNION",
+  weight:"25000 KG", volume:"",
+  reserv:"DRIVER: \nTRUCK NO: \nPASS NO: ",
+  estPlace:"ANZALI FREE ZONE", estDate:"{date}"
+};
+
+const uid = () => Math.random().toString(36).slice(2,9);
+const newProfile = (name, from) => ({
+  name, offTop:from?from.offTop:0, offLeft:from?from.offLeft:0,
+  font:from?from.font:10, lh:from?from.lh:1.15,
+  pos:from?JSON.parse(JSON.stringify(from.pos)):{}, bg:from?from.bg:''
+});
+
+let hadSaved = false;
+let S = load();
+function load(){
+  try{ const j = JSON.parse(localStorage.getItem(KEY)); if(j && j.profiles && j.current){ migrate(j); hadSaved = true; return j; } }catch(e){}
+  const id = uid(); const p = newProfile('Company 1');
+  return {current:id, profiles:{[id]:p}, records:[], data:{...SAMPLE}, dateTok:true};
+}
+const OLD = ['marks','pkgs','packing','nature'];
+function migrate(j){
+  const fix = d => {
+    if(!d || d.goods !== undefined || !OLD.some(k=>d[k])) return;
+    d.goods = [d.marks, [d.pkgs,d.packing].filter(Boolean).join(' '), d.nature].filter(Boolean).join('\n');
+  };
+  Object.values(j.profiles).forEach(p=>fix(p.data));
+  (j.records||[]).forEach(r=>fix(r.data));
+  if(!j.dateTok){
+    const re=/\d{4}[\/.-]\d{1,2}[\/.-]\d{1,2}/;
+    const tok=d=>{ if(d) ['taking','estDate'].forEach(k=>{ if(d[k]) d[k]=d[k].replace(re,'{date}'); }); };
+    Object.values(j.profiles).forEach(p=>tok(p.data));
+    (j.records||[]).forEach(r=>tok(r.data));
+    j.dateTok=true;
+  }
+  /* shipment data is shared by all companies; older files kept it inside each company */
+  if(!j.data){ const cp=j.profiles[j.current]; j.data={...((cp&&cp.data)||{})}; }
+  Object.values(j.profiles).forEach(p=>{ delete p.data; });
+}
+let storageWarned = false;
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }
+  catch(e){ if(!storageWarned){ toast('Browser storage is blocked or full – use Export to keep your data'); storageWarned = true; } }
+}
+const P = () => S.profiles[S.current];
+const $ = s => document.querySelector(s);
+function toast(t){ const el=$('#toast'); el.textContent=t; el.classList.add('on'); clearTimeout(toast.t); toast.t=setTimeout(()=>el.classList.remove('on'),2200); }
+function geo(f){ return Object.assign({x:f.x,y:f.y,w:f.w}, P().pos[f.k]||{}); }
+
+/* ---------- build UI ---------- */
+function buildForm(){
+  const box = $('#form'); box.innerHTML = '';
+  FIELDS.forEach(f=>{
+    const l = document.createElement('label'); l.textContent = f.n; l.htmlFor = 'in_'+f.k;
+    const t = document.createElement('textarea'); t.id = 'in_'+f.k; t.rows = f.rows; t.dir = 'auto';
+    t.value = S.data[f.k] || '';
+    t.addEventListener('input', ()=>{ S.data[f.k] = t.value; save(); renderSheet(); });
+    t.addEventListener('focus', ()=>{ if(editing) select(f.k); });
+    const head=document.createElement('div'); head.className='fh';
+    const tp=document.createElement('span'); tp.className='tp'; tp.append('Top (mm) ');
+    const ti=document.createElement('input'); ti.type='number'; ti.step='0.5'; ti.id='ty_'+f.k; ti.title='Distance of this box from the top of the page';
+    ti.addEventListener('input',()=>{
+      const v=parseFloat(ti.value); if(isNaN(v)) return;
+      P().pos[f.k]=Object.assign({},geo(f),{y:v}); save(); renderSheet();
+      if(selKey===f.k) $('#sy').value=v;
+    });
+    tp.append(ti); head.append(l,tp);
+    box.append(head,t);
+  });
+}
+function fillForm(){ FIELDS.forEach(f=>{ $('#in_'+f.k).value = S.data[f.k]||''; }); }
+function fillProfileSelect(){
+  const s = $('#profile'); s.innerHTML = '';
+  Object.entries(S.profiles).forEach(([id,p])=>{ const o=document.createElement('option'); o.value=id; o.textContent=p.name; s.append(o); });
+  s.value = S.current;
+}
+function fillSettings(){
+  const p=P(); $('#offTop').value=p.offTop; $('#offLeft').value=p.offLeft; $('#font').value=p.font; $('#lh').value=p.lh;
+}
+function renderRecs(){
+  const box=$('#recs'); box.innerHTML='';
+  if(!S.records.length){ box.innerHTML='<p class="note">Nothing saved yet.</p>'; return; }
+  S.records.forEach(r=>{
+    const d=document.createElement('div'); d.className='rec';
+    d.innerHTML='<span></span><button>Load</button><button class="danger">✕</button>';
+    d.firstChild.textContent=r.name;
+    d.children[1].onclick=()=>{ S.data={...r.data}; save(); fillForm(); renderSheet(); toast('Loaded “'+r.name+'”'); };
+    d.children[2].onclick=()=>{ if(confirm('Delete “'+r.name+'”?')){ S.records=S.records.filter(x=>x.id!==r.id); save(); renderRecs(); } };
+    box.append(d);
+  });
+}
+
+/* ---------- sheet ---------- */
+let editing=false, selKey=null;
+const pad2=n=>String(n).padStart(2,'0');
+const todayStr=()=>{ const d=new Date(); return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); };
+let printDate=todayStr();
+function fmtDate(){
+  const [y,m,d]=printDate.split('-');
+  return (S.dateFmt||'YYYY/MM/DD').replace('YYYY',y).replace('MM',m).replace('DD',d);
+}
+const withDate=t=>(t||'').replace(/\{date\}/gi,fmtDate());
+function renderSheet(){
+  const p=P(), layer=$('#layer');
+  layer.style.left=p.offLeft+'mm'; layer.style.top=p.offTop+'mm';
+  $('#bg').style.backgroundImage = p.bg ? 'url('+p.bg+')' : 'none';
+  layer.innerHTML='';
+  syncTops();
+  FIELDS.forEach(f=>{
+    const g=geo(f), d=document.createElement('div');
+    d.className='f'+(f.k===selKey?' sel':''); d.dataset.k=f.k; d.dataset.n=f.n; d.dir='auto';
+    d.style.cssText=`left:${g.x}mm;top:${g.y}mm;width:${g.w}mm;font-size:${p.font}pt;line-height:${p.lh};text-align:${f.align||'left'};font-weight:${f.bold?'bold':'normal'}`;
+    d.textContent = withDate(S.data[f.k]);
+    layer.append(d);
+  });
+}
+function syncTops(){
+  FIELDS.forEach(f=>{ const i=$('#ty_'+f.k); if(i && i!==document.activeElement) i.value=geo(f).y; });
+}
+function fit(){
+  const avail = $('#stage').clientWidth - 32, full = 210*96/25.4;
+  const s = Math.min(1.2, Math.max(.3, avail/full));
+  document.documentElement.style.setProperty('--s', s);
+}
+addEventListener('resize', fit);
+
+/* ---------- drag / select ---------- */
+function select(k){
+  selKey=k; const f=FIELDS.find(x=>x.k===k), g=geo(f);
+  $('#selBox').hidden = !k; if(!k) return renderSheet();
+  $('#selName').textContent=f.n; $('#sx').value=g.x; $('#sy').value=g.y; $('#sw').value=g.w;
+  renderSheet();
+}
+let drag=null;
+$('#layer').addEventListener('pointerdown', e=>{
+  if(!editing) return;
+  const el=e.target.closest('.f'); if(!el) return;
+  const k=el.dataset.k, f=FIELDS.find(x=>x.k===k), g=geo(f);
+  const mmPerPx = 210/$('#sheet').getBoundingClientRect().width;
+  drag={k,sx:e.clientX,sy:e.clientY,gx:g.x,gy:g.y,m:mmPerPx,id:e.pointerId};
+  select(k); e.preventDefault();
+});
+addEventListener('pointermove', e=>{
+  if(!drag) return;
+  const x=Math.round((drag.gx+(e.clientX-drag.sx)*drag.m)*2)/2, y=Math.round((drag.gy+(e.clientY-drag.sy)*drag.m)*2)/2;
+  const f=FIELDS.find(f=>f.k===drag.k), g=geo(f);
+  P().pos[drag.k]={x,y,w:g.w};
+  const el=$('#layer [data-k="'+drag.k+'"]'); if(el){ el.style.left=x+'mm'; el.style.top=y+'mm'; }
+  $('#sx').value=x; $('#sy').value=y; syncTops();
+});
+addEventListener('pointerup', ()=>{ if(drag){ drag=null; save(); } });
+['sx','sy','sw'].forEach(id=>$('#'+id).addEventListener('input',()=>{
+  if(!selKey) return;
+  P().pos[selKey]={x:+$('#sx').value||0,y:+$('#sy').value||0,w:Math.max(5,+$('#sw').value||5)};
+  save(); renderSheet();
+}));
+$('#sReset').onclick=()=>{ if(selKey){ delete P().pos[selKey]; save(); select(selKey); } };
+$('#editBtn').onclick=()=>{
+  editing=!editing; $('#sheet').classList.toggle('edit',editing);
+  $('#editBtn').textContent = editing ? 'Done moving fields' : 'Move fields on preview';
+  if(!editing){ selKey=null; $('#selBox').hidden=true; renderSheet(); }
+};
+
+/* ---------- settings ---------- */
+[['offTop','offTop'],['offLeft','offLeft'],['font','font'],['lh','lh']].forEach(([id,key])=>{
+  $('#'+id).addEventListener('input',()=>{ const v=parseFloat($('#'+id).value); if(isNaN(v)) return; P()[key]=v; save(); renderSheet(); });
+});
+
+/* ---------- profiles ---------- */
+$('#profile').onchange=e=>{ S.current=e.target.value; save(); selKey=null; $('#selBox').hidden=true; fillSettings(); fillForm(); renderSheet(); };
+$('#pNew').onclick=()=>{
+  const name=prompt('Company name for the new CMR form:'); if(!name) return;
+  const id=uid(); S.profiles[id]=newProfile(name.trim(),P());
+  S.current=id; save(); fillProfileSelect(); fillSettings(); fillForm(); renderSheet();
+  toast('Created. Adjust its top margin and fields.');
+};
+$('#pRen').onclick=()=>{ const n=prompt('New name:',P().name); if(n){ P().name=n.trim(); save(); fillProfileSelect(); } };
+$('#pDel').onclick=()=>{
+  if(Object.keys(S.profiles).length<2) return toast('Keep at least one company');
+  if(!confirm('Delete “'+P().name+'” and its layout?')) return;
+  delete S.profiles[S.current]; S.current=Object.keys(S.profiles)[0]; save();
+  fillProfileSelect(); fillSettings(); fillForm(); renderSheet();
+};
+$('#clearBtn').onclick=()=>{ if(confirm('Clear all fields?')){ S.data={}; save(); fillForm(); renderSheet(); } };
+
+/* ---------- reset layout ---------- */
+$('#resetLayout').onclick=()=>{
+  if(!confirm('Reset all alignment for “'+P().name+'” to default? (top/left margins, font, and the position of every box. Your typed data and the photo stay.)')) return;
+  const p=P(); p.offTop=0; p.offLeft=0; p.font=10; p.lh=1.15; p.pos={};
+  save(); selKey=null; $('#selBox').hidden=true; fillSettings(); renderSheet(); toast('Layout reset to default');
+};
+
+/* ---------- guide photo ---------- */
+$('#bgBtn').onclick=()=>$('#bgFile').click();
+$('#bgFile').onchange=e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const img=new Image(), url=URL.createObjectURL(file);
+  img.onload=()=>{
+    const w=Math.min(900,img.width), h=Math.round(img.height*w/img.width);
+    const c=document.createElement('canvas'); c.width=w; c.height=h;
+    c.getContext('2d').drawImage(img,0,0,w,h);
+    P().bg=c.toDataURL('image/jpeg',.6); URL.revokeObjectURL(url); save(); renderSheet();
+    toast('Photo is stretched to A4 – use it only as a rough guide');
+  };
+  img.src=url; e.target.value='';
+};
+$('#bgDel').onclick=()=>{ P().bg=''; save(); renderSheet(); };
+
+/* ---------- saved shipments ---------- */
+$('#recSave').onclick=()=>{
+  const n=$('#recName').value.trim()||('Shipment '+new Date().toLocaleDateString());
+  S.records.unshift({id:uid(),name:n,data:{...S.data}}); $('#recName').value=''; save(); renderRecs(); toast('Saved');
+};
+
+/* ---------- backup ---------- */
+$('#exp').onclick=()=>{
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([JSON.stringify(S)],{type:'application/json'}));
+  a.download='cmr-backup-'+new Date().toISOString().slice(0,10)+'.json'; a.click();
+};
+function applyConfig(j){
+  if(!j||!j.profiles||!j.current||!j.profiles[j.current]) throw new Error('bad config');
+  migrate(j); S=j; save(); selKey=null; $('#selBox').hidden=true;
+  $('#dFmt').value=S.dateFmt||'YYYY/MM/DD';
+  fillProfileSelect(); fillSettings(); buildForm(); renderRecs(); renderSheet();
+}
+async function fetchConfig(){
+  const r=await fetch('config.json',{cache:'no-store'});
+  if(!r.ok) throw new Error('http '+r.status);
+  return r.json();
+}
+$('#srv').onclick=async()=>{
+  if(!confirm('Replace the data in this browser with config.json from the server?')) return;
+  try{ applyConfig(await fetchConfig()); toast('Loaded config.json from server'); }
+  catch(e){ toast('config.json not found (or not valid) on the server'); }
+};
+$('#imp').onclick=()=>$('#impFile').click();
+$('#impFile').onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ try{ applyConfig(JSON.parse(r.result)); toast('File loaded'); }catch(x){ toast('Not a valid config file'); } };
+  r.readAsText(f); e.target.value='';
+};
+
+$('#printBtn').onclick=()=>{ if(editing) $('#editBtn').click(); setTimeout(()=>window.print(),50); };
+
+/* ---------- date ---------- */
+$('#pDate').value=printDate; $('#dFmt').value=S.dateFmt||'YYYY/MM/DD';
+$('#pDate').oninput=e=>{ printDate=e.target.value||todayStr(); renderSheet(); };
+$('#dFmt').onchange=e=>{ S.dateFmt=e.target.value; save(); renderSheet(); };
+$('#dToday').onclick=()=>{ printDate=todayStr(); $('#pDate').value=printDate; renderSheet(); };
+
+/* ---------- init ---------- */
+fillProfileSelect(); fillSettings(); buildForm(); renderRecs(); fit(); renderSheet();
+if(!hadSaved) fetchConfig().then(j=>{ applyConfig(j); toast('Loaded config.json from server'); }).catch(()=>{});
+</script>
+</body>
+</html>
