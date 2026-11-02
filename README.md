@@ -1,6 +1,6 @@
 <div dir="rtl" align="right">
 
-[English](README.md) | **فارسی**
+[English](README-en.md) | **فارسی**
 
 # CMR Printer (چاپگر سی‌ام‌آر)
 
