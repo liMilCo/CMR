@@ -241,6 +241,11 @@ Data saved in the browser belongs to the page address, so the GitHub Pages copy 
 
 All box positions are defined in the `FIELDS` list near the top of the script in the HTML file. Each entry has a key, a label, the default `x`, `y` and `w` (width) in millimetres on an A4 page, the number of rows in the form, and optional `align` and `bold` settings. The sample data is in the `SAMPLE` object right below it.
 
-## License
+## Contact
+🙋‍♀️ If you have any questions or concerns, please feel free to reach out to us via our discussions tracker.
 
-Add the license of your choice here (for example MIT) and a `LICENSE` file to the repository.
+## Donations
+* USDT-TRC20 or TRX:
+```
+TEA6H5EgqVsUXF1A157pFhVgpgtcLp2BMa
+```
