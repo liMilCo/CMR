@@ -1,4 +1,4 @@
-**English** | [فارسی](README-fa.md)
+**English** | [فارسی](README.md)
 
 # CMR Printer
 
