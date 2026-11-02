@@ -139,7 +139,7 @@ button.danger{color:var(--warn)}
     <input id="impFile" type="file" accept="application/json" hidden>
     <p class="note">Data is saved in this browser. To share it: export config.json, upload it to the server next to the HTML file. A browser with no saved data loads it automatically.</p>
 
-    <div id="printBar"><button class="primary" id="printBtn">Print on CMR</button>
+    <div id="printBar"><button class="primary" id="printBtn">Print on CMR (By liMil)</button>
       <p class="note">In the print dialog: paper A4, Margins “None”, Scale “100%”, Headers/footers off.</p></div>
   </aside>
 
@@ -430,5 +430,6 @@ $('#dToday').onclick=()=>{ printDate=todayStr(); $('#pDate').value=printDate; re
 fillProfileSelect(); fillSettings(); buildForm(); renderRecs(); fit(); renderSheet();
 if(!hadSaved) fetchConfig().then(j=>{ applyConfig(j); toast('Loaded config.json from server'); }).catch(()=>{});
 </script>
+<!-- Copywrite By liMil 2026 -->
 </body>
 </html>
