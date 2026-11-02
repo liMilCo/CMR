@@ -4,6 +4,9 @@
 
 A single-file web app for printing text onto **pre-printed CMR consignment notes**.
 
+<img width="1335" height="637" alt="image" src="https://github.com/user-attachments/assets/058e3cca-854e-4c70-9b06-9162e9987e8d" />
+
+
 Transport companies often work with CMR forms that are already printed with the carrier's logo and layout, and every company's form is slightly different. CMR Printer lets you type the shipment data once, then print only the text so that it lands in the right boxes of the paper form. Each company gets its own alignment (top margin, left margin, font size and the position of every box), and everything is saved in your browser for next time.
 
 - One HTML file. No server, no build step, no dependencies, no internet needed.
