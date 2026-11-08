@@ -1,11 +1,24 @@
-**English** | [فارسی](README.md)
+<div align="center">
+  
+**🇺🇸 English** | [🇮🇷 فارسی](README.md)
+
+</div>
 
 # CMR Printer
 
 A single-file web app for printing text onto **pre-printed CMR consignment notes**.
 
+<div align="center">
+
+[![Downloads](https://img.shields.io/github/downloads/liMilCo/CMR/total?style=flat-square&logo=github&label=Download)](https://github.com/liMilCo/CMR/archive/refs/tags/V1.1.zip)
+[![Last Version](https://img.shields.io/github/v/release/liMilCo/CMR?style=flat-square&label=Version)](https://github.com/liMilCo/CMR/releases/latest)
+[![License](https://img.shields.io/github/license/liMilCo/CMR?style=flat-square&label=License)](LICENSE)
+
+
+
 <img width="1335" height="637" alt="image" src="https://github.com/user-attachments/assets/058e3cca-854e-4c70-9b06-9162e9987e8d" />
 
+</div>
 
 Transport companies often work with CMR forms that are already printed with the carrier's logo and layout, and every company's form is slightly different. CMR Printer lets you type the shipment data once, then print only the text so that it lands in the right boxes of the paper form. Each company gets its own alignment (top margin, left margin, font size and the position of every box), and everything is saved in your browser for next time.
 
