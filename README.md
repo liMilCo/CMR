@@ -1,13 +1,26 @@
-<div dir="rtl" align="right">
+<div dir="rtl" align="center">
 
-[English](README-en.md) | **فارسی**
+[🇺🇸 English](README-en.md) | **🇮🇷 فارسی**
+
+</div>
+<div dir="rtl" align="right">
 
 # CMR Printer (چاپگر سیمر)
 
 یک برنامه‌ی وب تک‌فایلی برای **چاپ اطلاعات روی برگه‌های CMR از قبل چاپ‌شده**.
+</div>
+<div align="center">
+  
+[![Downloads](https://img.shields.io/github/downloads/liMilCo/CMR/total?style=flat-square&logo=github&label=Download)](https://github.com/liMilCo/CMR/archive/refs/tags/V1.1.zip)
+[![Last Version](https://img.shields.io/github/v/release/liMilCo/CMR?style=flat-square&label=Version)](https://github.com/liMilCo/CMR/releases/latest)
+[![License](https://img.shields.io/github/license/liMilCo/CMR?style=flat-square&label=License)](LICENSE)
+
+
+
 <img width="1332" height="641" alt="image" src="https://github.com/user-attachments/assets/9024e963-c421-4e05-a183-f6a1f1455f33" />
 
-
+</div>
+<div dir="rtl" align="right">
 
 شرکت‌های حمل‌ونقل معمولاً با فرم‌های CMR کار می‌کنند که لوگو و چیدمان شرکت حمل‌کننده روی آن‌ها از قبل چاپ شده است و فرم هر شرکت کمی با دیگری فرق دارد. با CMR Printer اطلاعات محموله را فقط یک بار وارد می‌کنید و سپس فقط متن چاپ می‌شود تا دقیقاً در کادرهای برگه‌ی CMR بنشیند. هر شرکت تنظیمات چاپ مخصوص خودش را دارد (حاشیه‌ی بالا، حاشیه‌ی چپ، اندازه‌ی قلم و جای هر کادر) و همه‌چیز برای دفعه‌ی بعد در مرورگر ذخیره می‌شود.
 
