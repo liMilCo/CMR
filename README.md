@@ -203,6 +203,14 @@
 
 **نوشته‌های لیست کشویی خوانا نیست.** از نسخه‌ی به‌روز Chrome، Edge یا Firefox استفاده کنید.
 
+بنا به تجربه شخصی با مرورگر کروم دقیق ترین پرینت زمانی خواهد بود که سایز صفحه را در برنامه روی A4 قرار دهید، موقع پرینت تنضیمات پرینتر را روی حالت Letter بگزارید:
+
+<img width="394" height="101" alt="image" src="https://github.com/user-attachments/assets/e1c74b43-0959-470f-be16-868234140de3" />
+
+<img width="353" height="154" alt="image" src="https://github.com/user-attachments/assets/ed880dd6-9fce-49ff-a546-8b5d8b008391" />
+
+
+
 ## ساختار پروژه
 
 <div dir="ltr" align="left">
