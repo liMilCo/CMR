@@ -16,7 +16,8 @@ A single-file web app for printing text onto **pre-printed CMR consignment notes
 
 
 
-<img width="1335" height="637" alt="image" src="https://github.com/user-attachments/assets/058e3cca-854e-4c70-9b06-9162e9987e8d" />
+<img width="1339" height="642" alt="image" src="https://github.com/user-attachments/assets/793332a9-a523-4391-ab55-582d0571ec69" />
+
 
 </div>
 
