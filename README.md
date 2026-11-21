@@ -18,7 +18,8 @@
 
 
 
-<img width="1332" height="641" alt="image" src="https://github.com/user-attachments/assets/9024e963-c421-4e05-a183-f6a1f1455f33" />
+<img width="1338" height="639" alt="image" src="https://github.com/user-attachments/assets/f287e56e-1b30-4619-b9b4-3cb8d4c680bb" />
+
 
 </div>
 <div dir="rtl" align="right">
