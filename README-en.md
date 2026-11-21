@@ -179,53 +179,12 @@ Everything (companies, layouts, guide photos, shipment data, saved shipments and
 
 If `config.json` does not exist, the app simply starts with built-in sample data. Loading `config.json` only works when the page is opened from a web server (`http://` or `https://`); when you open the HTML file directly from your disk, use **Import Data** instead.
 
-> **Privacy warning:** `config.json` contains your companies and shipment data. Do not publish a real `config.json` in a public GitHub repository or on a public web page. Only put it on a private server.
-
-## Hosting on GitHub Pages (optional)
-
-You can host the app so you can open it from anywhere:
-
-1. Rename `cmr-printer.html` to `index.html` and commit it to the repository.
-2. In the repository go to **Settings > Pages**, choose the branch (for example `main`) and the root folder, and save.
-3. Open the address GitHub shows, usually `https://<username>.github.io/<repository>/`.
-
-Data saved in the browser belongs to the page address, so the GitHub Pages copy and a copy opened from your disk have separate data. Use Export and Import to move between them.
-
 ## How data is stored
 
 - Saved in the browser's `localStorage` under the key `cmrPrinter.v1`.
 - The data is stored per browser, per browser profile and per page address.
 - Private/incognito windows do not keep the data.
 - Guide photos are shrunk (about 900 px wide) before saving to save space.
-
-### `config.json` format
-
-`config.json` is the same file the **Export Data** button creates. It is plain JSON:
-
-```json
-{
-  "current": "abc123",
-  "profiles": {
-    "abc123": {
-      "name": "Company 1",
-      "offTop": 0,
-      "offLeft": 0,
-      "font": 10,
-      "lh": 1.15,
-      "pos": {},
-      "bg": ""
-    }
-  },
-  "data": { "sender": "...", "consignee": "..." },
-  "records": [],
-  "dateFmt": "YYYY/MM/DD",
-  "dateTok": true
-}
-```
-
-- `profiles` – one entry per company; `pos` holds the custom x, y and width (mm) of the boxes that were moved.
-- `data` – the shipment data shared by all companies.
-- `records` – the saved shipments.
 
 ## Troubleshooting
 
