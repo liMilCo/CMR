@@ -10,7 +10,7 @@ A single-file web app for printing text onto **pre-printed CMR consignment notes
 
 <div align="center">
 
-[![Downloads](https://img.shields.io/github/downloads/liMilCo/CMR/V1.1/total?style=flat-square&logo=github&label=Offline%20Use)](https://github.com/liMilCo/CMR/archive/refs/tags/V1.1.zip)
+[![Downloads](https://img.shields.io/github/downloads/liMilCo/CMR/total?style=flat-square&logo=github&label=Offline%20Use)](https://github.com/liMilCo/CMR/releases)
 [![Last Version](https://img.shields.io/github/v/release/liMilCo/CMR?style=flat-square&label=Version)](https://github.com/liMilCo/CMR/releases/latest)
 [![GitHub License](https://img.shields.io/github/license/liMilCo/CMR?style=flat-square)](LICENSE)
 
