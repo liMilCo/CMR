@@ -4,15 +4,18 @@
 
 </div>
 
+<p align="center"><img src="CMR-Logo.png" width="128" alt="Arman VPN"></p>
+
+
 # CMR Printer
 
-A single-file web app for printing text onto **pre-printed CMR consignment notes**.
+A web app for printing text onto **pre-printed CMR consignment notes**.
 
 <div align="center">
 
-[![Downloads](https://img.shields.io/github/downloads/liMilCo/CMR/total?style=flat-square&logo=github&label=Offline%20Use)](https://github.com/liMilCo/CMR/releases)
-[![Last Version](https://img.shields.io/github/v/release/liMilCo/CMR?style=flat-square&label=Version)](https://github.com/liMilCo/CMR/releases/latest)
-[![GitHub License](https://img.shields.io/github/license/liMilCo/CMR?style=flat-square)](LICENSE)
+[![Online_Use](https://img.shields.io/badge/CMR_Print-Online-red?logo=github)](https://limilco.github.io/CMR/)
+[![Downloads](https://img.shields.io/github/v/release/liMilCo/CMR?label=Download)](https://github.com/liMilCo/CMR/releases/latest)
+[![GitHub License](https://img.shields.io/github/license/liMilCo/CMR)](LICENSE)
 
 
 
