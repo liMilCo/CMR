@@ -4,7 +4,7 @@
 
 </div>
 
-<p align="center"><img src="CMR-Logo.png" width="128" alt="Arman VPN"></p>
+<p align="center"><img src="doc/CMR-Logo.png" width="128" alt="Arman VPN"></p>
 
 <div dir="rtl" align="right">
 
@@ -39,6 +39,7 @@
   </table>
 </div>
 
+<br>
 
 <div align="center">
 
@@ -50,7 +51,7 @@
 
 
 
-<img width="1338" height="639" alt="image" src="https://github.com/user-attachments/assets/f287e56e-1b30-4619-b9b4-3cb8d4c680bb" />
+<img width="1338" height="639" alt="image" src="doc/mockup.png" />
 
 
 </div>
