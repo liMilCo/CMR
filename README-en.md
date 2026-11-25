@@ -4,7 +4,7 @@
 
 </div>
 
-<p align="center"><img src="CMR-Logo.png" width="128" alt="Arman VPN"></p>
+<p align="center"><img src="doc/CMR-Logo.png" width="128" alt="CMR Print"></p>
 
 
 # CMR Printer
@@ -19,7 +19,7 @@ A web app for printing text onto **pre-printed CMR consignment notes**.
 
 
 
-<img width="1339" height="642" alt="image" src="https://github.com/user-attachments/assets/793332a9-a523-4391-ab55-582d0571ec69" />
+<img width="1338" height="639" alt="image" src="doc/mockup.png" />
 
 
 </div>
@@ -47,7 +47,7 @@ Transport companies often work with CMR forms that are already printed with the 
 
 ## Quick start
 
-1. Download `index.html` (or `cmr-printer.html`).
+1. Download `index.html` (or `Releases > Source code (zip)`).
 2. Open it in Chrome or Edge.
 3. Fill in the shipment data on the left.
 4. Put the pre-printed CMR in the printer, press **Print on CMR**.
