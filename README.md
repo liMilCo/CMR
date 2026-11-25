@@ -3,17 +3,49 @@
 [🇺🇸 English](README-en.md) | **🇮🇷 فارسی**
 
 </div>
+
+<p align="center"><img src="CMR-Logo.png" width="128" alt="Arman VPN"></p>
+
 <div dir="rtl" align="right">
 
 # CMR Printer (چاپگر سیمر)
 
-یک برنامه‌ی وب تک‌فایلی برای **چاپ اطلاعات روی برگه‌های CMR از قبل چاپ‌شده**.
+یک برنامه‌ی تحت وب برای **چاپ اطلاعات روی برگه‌های CMR**.
+
 </div>
+<div align=center>
+  <table>
+      <thead>
+          <tr>
+            <td>
+              <p align="center">
+<b>
+
+ما در آدرس 
+<a href="https://cmr.tvt1.ir/" target="_blank">cmr.tvt1.ir</a>
+ فرمت تعدادی از شرکت ها را آماده کردیم که می توانید به رایگان استفاده کنید.
+ 
+و برای استفاده شخصی می توانید به آدرس 
+<a href="https://limilco.github.io/CMR/" target="_blank">limilco.github.io/CMR</a>
+مراجعه نمایید.
+
+
+                
+</b>
+              </p>
+            </td>
+        </tr>
+      </thead>
+  </table>
+</div>
+
+
 <div align="center">
-  
-[![Downloads](https://img.shields.io/github/downloads/liMilCo/CMR/total?style=flat-square&logo=github&label=Offline%20Use)](https://github.com/liMilCo/CMR/releases)
-[![Last Version](https://img.shields.io/github/v/release/liMilCo/CMR?style=flat-square&label=Version)](https://github.com/liMilCo/CMR/releases/latest)
-[![GitHub License](https://img.shields.io/github/license/liMilCo/CMR?style=flat-square)](LICENSE)
+
+  [![Downloads](https://img.shields.io/badge/CMR_Print-Premium-green)](https://cmr.tvt1.ir/) 
+  [![Downloads](https://img.shields.io/badge/CMR_Print-Simple-red?logo=github)](https://limilco.github.io/CMR/)
+  [![Last Version](https://img.shields.io/github/v/release/liMilCo/CMR?style=flat-square&label=Download)](https://github.com/liMilCo/CMR/releases/latest)
+  [![GitHub License](https://img.shields.io/github/license/liMilCo/CMR?style=flat-square)](LICENSE)
 
 
 
