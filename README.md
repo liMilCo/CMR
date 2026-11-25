@@ -4,7 +4,7 @@
 
 </div>
 
-<p align="center"><img src="doc/CMR-Logo.png" width="128" alt="Arman VPN"></p>
+<p align="center"><img src="doc/CMR-Logo.png" width="128" alt="CMR Print"></p>
 
 <div dir="rtl" align="right">
 
