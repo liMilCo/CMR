@@ -44,8 +44,8 @@
 
   [![Downloads](https://img.shields.io/badge/CMR_Print-Premium-green)](https://cmr.tvt1.ir/) 
   [![Downloads](https://img.shields.io/badge/CMR_Print-Simple-red?logo=github)](https://limilco.github.io/CMR/)
-  [![Last Version](https://img.shields.io/github/v/release/liMilCo/CMR?style=flat-square&label=Download)](https://github.com/liMilCo/CMR/releases/latest)
-  [![GitHub License](https://img.shields.io/github/license/liMilCo/CMR?style=flat-square)](LICENSE)
+  [![Last Version](https://img.shields.io/github/v/release/liMilCo/CMR?label=Download)](https://github.com/liMilCo/CMR/releases/latest)
+  [![GitHub License](https://img.shields.io/github/license/liMilCo/CMR)](LICENSE)
 
 
 
